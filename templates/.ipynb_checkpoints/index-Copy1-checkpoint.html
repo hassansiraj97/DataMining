@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+        main {
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .prediction-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Appendix Predictor</h1>
+    </header>
+    <main>
+        <form action="/predict" method="POST">
+            <div class="form-group">
+                <label for="sex">Gender</label>
+                <select id="sex" name="Sex" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bmi_category">BMI Category</label>
+                <input type="number" id="bmi_category" name="BMI_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="crp_category">CRP Category</label>
+                <input type="number" id="crp_category" name="CRP_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="wbc_count_category">WBC Count Category</label>
+                <input type="number" id="wbc_count_category" name="WBC_Count_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="temperature_category">Temperature Category</label>
+                <input type="number" id="temperature_category" name="Temperature_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="alvarado_score_category">Alvarado Score Category</label>
+                <input type="number" id="alvarado_score_category" name="Alvarado_Score_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="migratory_pain">Migratory Pain</label>
+                <input type="number" id="migratory_pain" name="Migratory_Pain" required>
+            </div>
+            <div class="form-group">
+                <label for="us_performed">US Performed</label>
+                <input type="number" id="us_performed" name="US_Performed" required>
+            </div>
+            <div class="form-group">
+                <label for="ipsilateral_rebound_tenderness">Ipsilateral Rebound Tenderness</label>
+                <input type="number" id="ipsilateral_rebound_tenderness" name="Ipsilateral_Rebound_Tenderness" required>
+            </div>
+            <div class="form-group">
+                <label for="lower_right_abd_pain">Lower Right Abdomen Pain</label>
+                <input type="number" id="lower_right_abd_pain" name="Lower_Right_Abd_Pain" required>
+            </div>
+            <div class="form-group">
+                <label for="coughing_pain">Coughing Pain</label>
+                <input type="number" id="coughing_pain" name="Coughing_Pain" required>
+            </div>
+            <div class="form-group">
+                <label for="nausea">Nausea</label>
+                <input type="number" id="nausea" name="Nausea" required>
+            </div>
+            <button type="submit">Submit Details</button>
+        </form>
+        <div class="message prediction-message">
+            <strong>This is what you have output:</strong> {{ prediction_message }}
+        </div>
+        
+        {% if prediction_message %}
+        <div class="message prediction-message">
+            <strong>Prediction Result:</strong> {{ prediction_message }}
+        </div>
+        {% elif error_message %}
+        <div class="message error-message">
+            <strong>Error:</strong> {{ error_message }}
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>

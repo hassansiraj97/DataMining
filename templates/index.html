@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendicitis Prediction</title>
+</head>
+<body>
+    <h1>Appendicitis Prediction</h1>
+    <form action="/predict" method="POST" enctype="multipart/form-data">
+        <label for="Sex">Sex:</label>
+        <select name="Sex" id="Sex" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <br>
+
+        <label for="Alvarado_Score">Alvarado Score:</label>
+        <input type="number" step="0.1" name="Alvarado_Score" id="Alvarado_Score" required>
+        <br>
+
+        <label for="Body_Temperature">Body Temperature (°C):</label>
+        <input type="number" step="0.1" name="Body_Temperature" id="Body_Temperature" required>
+        <br>
+
+        <label for="Paedriatic_Appendicitis_Score">Pediatric Appendicitis Score:</label>
+        <input type="number" step="0.1" name="Paedriatic_Appendicitis_Score" id="Paedriatic_Appendicitis_Score" required>
+        <br>
+
+        <label for="WBC_Count">WBC Count:</label>
+        <input type="number" step="0.1" name="WBC_Count" id="WBC_Count" required>
+        <br>
+
+        <label for="Neutrophil_Percentage">Neutrophil Percentage:</label>
+        <input type="number" step="0.1" name="Neutrophil_Percentage" id="Neutrophil_Percentage" required>
+        <br>
+
+        <label for="CRP">CRP:</label>
+        <input type="number" step="0.1" name="CRP" id="CRP" required>
+        <br>
+
+        <label for="BMI">BMI:</label>
+        <input type="number" step="0.1" name="BMI" id="BMI" required>
+        <br>
+
+        <label for="Height">Height (cm):</label>
+        <input type="number" step="0.1" name="Height" id="Height" required>
+        <br>
+
+        <label for="Weight">Weight (kg):</label>
+        <input type="number" step="0.1" name="Weight" id="Weight" required>
+        <br>
+
+        <label for="US_Performed">US Performed:</label>
+        <select name="US_Performed" id="US_Performed" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+
+        <label for="Ipsilateral_Rebound_Tenderness">Ipsilateral Rebound Tenderness:</label>
+        <select name="Ipsilateral_Rebound_Tenderness" id="Ipsilateral_Rebound_Tenderness" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+
+        <label for="Lower_Right_Abd_Pain">Lower Right Abdominal Pain:</label>
+        <select name="Lower_Right_Abd_Pain" id="Lower_Right_Abd_Pain" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+
+        <label for="Coughing_Pain">Coughing Pain:</label>
+        <select name="Coughing_Pain" id="Coughing_Pain" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+
+        <label for="Nausea">Nausea:</label>
+        <select name="Nausea" id="Nausea" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+
+        <label for="Migratory_Pain">Migratory Pain:</label>
+        <select name="Migratory_Pain" id="Migratory_Pain" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+
+        <label for="Image1">Upload Image 1:</label>
+        <input type="file" name="Image1" id="Image1" accept="image/*" required>
+        <br>
+
+        <label for="Image2">Upload Image 2:</label>
+        <input type="file" name="Image2" id="Image2" accept="image/*" required>
+        <br>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction_message %}
+        <h2>Prediction Result:</h2>
+        <p>{{ prediction_message }}</p>
+    {% endif %}
+
+    {% if error_message %}
+        <h2>Error:</h2>
+        <p>{{ error_message }}</p>
+    {% endif %}
+</body>
+</html>
