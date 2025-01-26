@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendicitis Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+ 
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+ 
+        .tab {
+            display: flex;
+            justify-content: center;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            border-bottom: 2px solid #007bff;
+            gap: 5px;
+        }
+ 
+        .tab button {
+            background-color: #e9ecef;
+            border: 2px solid #007bff;
+            border-radius: 25px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            color: #007bff;
+        }
+ 
+        .tab button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+ 
+        .tab button.active {
+            background-color: #007bff;
+            color: white;
+        }
+ 
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            background: white;
+            max-width: 900px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+ 
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+ 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+ 
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+ 
+        input, select, button {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+ 
+        button {
+            grid-column: span 2;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px;
+            text-align: center;
+        }
+ 
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Appendicitis Prediction</h1>
+    </header>
+ 
+    <!-- Tab navigation -->
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'RandomForest')">Random Forest</button>
+        <button class="tablinks" onclick="openTab(event, 'SVC')">SVC</button>
+        <button class="tablinks" onclick="openTab(event, 'LogisticRegression')">Logistic Regression</button>
+    </div>
+ 
+    <!-- Random Forest Tab Content -->
+    <div id="RandomForest" class="tabcontent">
+        <form action="/predict_random_forest" method="POST" enctype="multipart/form-data">
+            <!-- Form fields here -->
+            <div class="form-group">
+                <label for="Sex">Sex:</label>
+                <select name="Sex" id="Sex" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Alvarado_Score">Alvarado Score:</label>
+                <input type="number" step="0.1" name="Alvarado_Score" id="Alvarado_Score" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Body_Temperature">Body Temperature (°C):</label>
+                <input type="number" step="0.1" name="Body_Temperature" id="Body_Temperature" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Paedriatic_Appendicitis_Score">Pediatric Appendicitis Score:</label>
+                <input type="number" step="0.1" name="Paedriatic_Appendicitis_Score" id="Paedriatic_Appendicitis_Score" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="WBC_Count">WBC Count:</label>
+                <input type="number" step="0.1" name="WBC_Count" id="WBC_Count" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Neutrophil_Percentage">Neutrophil Percentage:</label>
+                <input type="number" step="0.1" name="Neutrophil_Percentage" id="Neutrophil_Percentage" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="CRP">CRP:</label>
+                <input type="number" step="0.1" name="CRP" id="CRP" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="BMI">BMI:</label>
+                <input type="number" step="0.1" name="BMI" id="BMI" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Height">Height (cm):</label>
+                <input type="number" step="0.1" name="Height" id="Height" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Weight">Weight (kg):</label>
+                <input type="number" step="0.1" name="Weight" id="Weight" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="US_Performed">US Performed:</label>
+                <select name="US_Performed" id="US_Performed" required>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Image1">Upload Image 1:</label>
+                <input type="file" name="Image1" id="Image1" accept="image/*" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Image2">Upload Image 2:</label>
+                <input type="file" name="Image2" id="Image2" accept="image/*" required>
+            </div>
+            <!-- Add all other fields and buttons as in your original Random Forest form -->
+            <button type="submit">Predict with Random Forest</button>
+        </form>
+    </div>
+ 
+    <!-- SVC Tab Content -->
+    <div id="SVC" class="tabcontent">
+        <form action="/predict_svc" method="POST" enctype="multipart/form-data">
+            <!-- Form fields here -->
+            <div class="form-group">
+                <label for="Sex">Sex:</label>
+                <select name="Sex" id="Sex" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Alvarado_Score">Alvarado Score:</label>
+                <input type="number" step="0.1" name="Alvarado_Score" id="Alvarado_Score" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Body_Temperature">Body Temperature (°C):</label>
+                <input type="number" step="0.1" name="Body_Temperature" id="Body_Temperature" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Paedriatic_Appendicitis_Score">Pediatric Appendicitis Score:</label>
+                <input type="number" step="0.1" name="Paedriatic_Appendicitis_Score" id="Paedriatic_Appendicitis_Score" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="WBC_Count">WBC Count:</label>
+                <input type="number" step="0.1" name="WBC_Count" id="WBC_Count" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Neutrophil_Percentage">Neutrophil Percentage:</label>
+                <input type="number" step="0.1" name="Neutrophil_Percentage" id="Neutrophil_Percentage" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="CRP">CRP:</label>
+                <input type="number" step="0.1" name="CRP" id="CRP" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="BMI">BMI:</label>
+                <input type="number" step="0.1" name="BMI" id="BMI" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Height">Height (cm):</label>
+                <input type="number" step="0.1" name="Height" id="Height" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Weight">Weight (kg):</label>
+                <input type="number" step="0.1" name="Weight" id="Weight" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="US_Performed">US Performed:</label>
+                <select name="US_Performed" id="US_Performed" required>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Image1">Upload Image 1:</label>
+                <input type="file" name="Image1" id="Image1" accept="image/*" required>
+            </div>
+ 
+            <div class="form-group">
+                <label for="Image2">Upload Image 2:</label>
+                <input type="file" name="Image2" id="Image2" accept="image/*" required>
+            </div>
+            <!-- Add all other fields and buttons as in your original SVC form -->
+            <button type="submit">Predict with SVC</button>
+        </form>
+    </div>
+ 
+    <!-- Logistic Regression Tab Content -->
+    <div id="LogisticRegression" class="tabcontent">
+        <form action="/predict_logistic_regression" method="POST" enctype="multipart/form-data">
+            <!-- Form fields here -->
+            <div class="form-group">
+                <label for="sex">Gender</label>
+                <select id="sex" name="Sex" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bmi_category">BMI Category</label>
+                <input type="number" id="bmi_category" name="BMI_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="crp_category">CRP Category</label>
+                <input type="number" id="crp_category" name="CRP_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="wbc_count_category">WBC Count Category</label>
+                <input type="number" id="wbc_count_category" name="WBC_Count_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="temperature_category">Temperature Category</label>
+                <input type="number" id="temperature_category" name="Temperature_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="alvarado_score_category">Alvarado Score Category</label>
+                <input type="number" id="alvarado_score_category" name="Alvarado_Score_Category" required>
+            </div>
+            <div class="form-group">
+                <label for="migratory_pain">Migratory Pain</label>
+                <input type="number" id="migratory_pain" name="Migratory_Pain" required>
+            </div>
+            <div class="form-group">
+                <label for="us_performed">US Performed</label>
+                <input type="number" id="us_performed" name="US_Performed" required>
+            </div>
+            <div class="form-group">
+                <label for="ipsilateral_rebound_tenderness">Ipsilateral Rebound Tenderness</label>
+                <input type="number" id="ipsilateral_rebound_tenderness" name="Ipsilateral_Rebound_Tenderness" required>
+            </div>
+            <div class="form-group">
+                <label for="lower_right_abd_pain">Lower Right Abdomen Pain</label>
+                <input type="number" id="lower_right_abd_pain" name="Lower_Right_Abd_Pain" required>
+            </div>
+            <div class="form-group">
+                <label for="coughing_pain">Coughing Pain</label>
+                <input type="number" id="coughing_pain" name="Coughing_Pain" required>
+            </div>
+            <div class="form-group">
+                <label for="nausea">Nausea</label>
+                <input type="number" id="nausea" name="Nausea" required>
+            </div>
+            <!-- Add all other fields and buttons as in your original Logistic Regression form -->
+            <button type="submit">Predict with Logistic Regression</button>
+        </form>
+    </div>
+ 
+    <script>
+        function openTab(evt, tabId) {
+            let tabcontent = document.getElementsByClassName("tabcontent");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            let tablinks = document.getElementsByClassName("tablinks");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabId).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+ 
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector(".tablinks").click();
+        });
+    </script>
+</body>
+</html>

@@ -15,6 +15,7 @@ app = Flask(__name__)
 # Load the saved Random Forest model and preprocessor
 with open('random_forest.pkl', 'rb') as model_file:
     random_forest_model = pickle.load(model_file)
+print(type(random_forest_model))
 
 with open('preprocessor.pkl', 'rb') as preprocessor_file:
     preprocessor = pickle.load(preprocessor_file)
@@ -92,31 +93,59 @@ def predict():
 
 
         # Combine tabular data and image features
-        tabular_data = np.array([
-            1 if sex.lower() == 'male' else 0,
-            alvarado_score, body_temperature, pediatric_appendicitis_score, wbc_count,
-            neutrophil_percentage, crp, bmi, height, weight, us_performed,
-            ipsilateral_rebound_tenderness, lower_right_abd_pain, coughing_pain, nausea,
-            migratory_pain
+        cat_tabular_data = np.array([
+            sex, migratory_pain, us_performed, ipsilateral_rebound_tenderness, lower_right_abd_pain, coughing_pain, nausea,    
         ])
+        #categorical_features = ['Sex', 'Migratory_Pain', 'US_Performed', 'Ipsilateral_Rebound_Tenderness', 'Lower_Right_Abd_Pain', 'Coughing_Pain', 'Nausea']
+
+        tabular_data = np.array([
+            alvarado_score, body_temperature, pediatric_appendicitis_score, wbc_count,
+            neutrophil_percentage, crp, bmi, height, weight
+        ])
+        #numerical_features = [ 'Alvarado_Score', 'Body_Temperature','Paedriatic_Appendicitis_Score', 'WBC_Count', 'Neutrophil_Percentage', 'CRP', 'BMI', 'Height', 'Weight'] + [col for col in all_columns if col.startswith('Image')]
         
-        print("Shape of tabular data:", tabular_data.shape)
-        print("Shape of image features 1:", image_features_1.shape)
-        print("Shape of image features 2:", image_features_2.shape)
+
        
 
 
 
-        combined_features = np.concatenate([tabular_data, image_features_1, image_features_2])
-        print("Shape of combined features before preprocessing:", combined_features.shape)
-        print("Expected number of columns from preprocessor:", len(preprocessor.get_feature_names_out()))
-        print("Columns in combined features:", combined_features.columns.tolist())
-        print("Columns expected by preprocessor:", preprocessor.get_feature_names_out())
+        combined_features = np.concatenate([tabular_data, image_features_1, image_features_2, cat_tabular_data])
 
-        # Preprocess the combined features
-        combined_features = pd.DataFrame([combined_features], columns=preprocessor.get_feature_names_out())
-        processed_features = preprocessor.transform(combined_features)
-        
+        print(preprocessor.get_feature_names_out().shape)
+        print(combined_features.shape)
+        # Ensure feature order is exactly the same as used in training
+        column_order = [
+            'Alvarado_Score', 'Body_Temperature', 'Paedriatic_Appendicitis_Score', 'WBC_Count',
+            'Neutrophil_Percentage', 'CRP', 'BMI', 'Height', 'Weight'
+        ] 
+
+# Add dynamically generated image feature names (Image_1_Feature_1 to Image_2_Feature_2048)
+        image_features_names = [f"Image_1_Feature_{i}" for i in range(1, 2049)] + \
+                                           [f"Image_2_Feature_{i}" for i in range(1, 2049)]
+
+        categorical_feature_names = [
+                'Sex', 'Migratory_Pain', 'US_Performed', 'Ipsilateral_Rebound_Tenderness', 
+                'Lower_Right_Abd_Pain', 'Coughing_Pain', 'Nausea'
+        ]
+
+# Combine all feature names in the same order as used in training
+        expected_columns = column_order + image_features_names + categorical_feature_names
+
+# Create DataFrame with correct column names
+        combined_features_df = pd.DataFrame([combined_features], columns=expected_columns)
+
+# Reindexing to ensure the correct order
+        combined_features_df = combined_features_df.reindex(columns=expected_columns, fill_value=0)
+
+# Preprocess the data
+        processed_features = preprocessor.transform(combined_features_df)
+
+
+# Ensure the correct order
+
+        print(combined_features_df)
+        processed_features = preprocessor.transform(combined_features_df)
+        print('Preprocessing completed')
         
         # Make prediction
         prediction = random_forest_model.predict(processed_features)[0]
