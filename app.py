@@ -54,7 +54,15 @@ def index():
 def predict():
     try:
         # Get the form inputs
-        sex = request.form['Sex']
+        #sex = request.form['Sex']
+        sex = 'male' if request.form['Sex'].strip().lower() == 'male' else 'female'
+        us_performed = 'yes' if request.form['US_Performed'].strip().lower() == 1 else 'no'
+        ipsilateral_rebound_tenderness = 'yes' if request.form['Ipsilateral_Rebound_Tenderness'].strip().lower() == 1 else 'no'
+        lower_right_abd_pain = 'yes' if request.form['Lower_Right_Abd_Pain'].strip().lower() == 'true' else 'no'
+        coughing_pain = 'yes' if request.form['Coughing_Pain'].strip().lower() == 'true' else 'no'
+        nausea = 'yes' if request.form['Nausea'].strip().lower() == 'true' else 'no'
+        migratory_pain = 'yes' if request.form['Migratory_Pain'].strip().lower() == 'true' else 'no'
+
         alvarado_score = float(request.form['Alvarado_Score'])
         body_temperature = float(request.form['Body_Temperature'])
         pediatric_appendicitis_score = float(request.form['Paedriatic_Appendicitis_Score'])
@@ -64,12 +72,7 @@ def predict():
         bmi = float(request.form['BMI'])
         height = float(request.form['Height'])
         weight = float(request.form['Weight'])
-        us_performed = int(request.form['US_Performed'])
-        ipsilateral_rebound_tenderness = int(request.form['Ipsilateral_Rebound_Tenderness'])
-        lower_right_abd_pain = int(request.form['Lower_Right_Abd_Pain'])
-        coughing_pain = int(request.form['Coughing_Pain'])
-        nausea = int(request.form['Nausea'])
-        migratory_pain = int(request.form['Migratory_Pain'])
+
 
         # Process the uploaded images
         image_file_1 = request.files['Image1']
@@ -91,7 +94,7 @@ def predict():
             raise ValueError("Two images must be uploaded")
 
 
-
+        print(us_performed)
         # Combine tabular data and image features
         cat_tabular_data = np.array([
             sex, migratory_pain, us_performed, ipsilateral_rebound_tenderness, lower_right_abd_pain, coughing_pain, nausea,    
@@ -139,6 +142,9 @@ def predict():
 
 # Preprocess the data
         processed_features = preprocessor.transform(combined_features_df)
+        print(processed_features)
+        combined_features_df_test = pd.DataFrame(processed_features, columns=expected_columns)
+        combined_features_df_test.to_csv('D:/test_input.csv', index=False)
 
 
 # Ensure the correct order
